@@ -18,51 +18,51 @@ resource "aws_internet_gateway" "igw" {
 
 # ____________________________
 
-resource "aws_subnet" "private-eu-west-1a" {
+resource "aws_subnet" "private-1a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/19"
-  availability_zone = "eu-west-1a"
+  availability_zone = "${var.aws_region}a"
 
   tags = {
-    "Name"                            = "private-eu-west-1a"
+    "Name"                            = "private-1a"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/demo"      = "owned"
   }
 }
 
-resource "aws_subnet" "private-eu-west-1b" {
+resource "aws_subnet" "private-1b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.32.0/19"
-  availability_zone = "eu-west-1b"
+  availability_zone = "${var.aws_region}b"
 
   tags = {
-    "Name"                            = "private-eu-west-1b"
+    "Name"                            = "private-1b"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/demo"      = "owned"
   }
 }
 
-resource "aws_subnet" "public-eu-west-1a" {
+resource "aws_subnet" "public-1a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.64.0/19"
-  availability_zone       = "eu-west-1a"
+  availability_zone       = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                       = "public-eu-west-1a"
+    "Name"                       = "public-1a"
     "kubernetes.io/role/elb"     = "1"
     "kubernetes.io/cluster/demo" = "owned"
   }
 }
 
-resource "aws_subnet" "public-eu-west-1b" {
+resource "aws_subnet" "public-1b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.96.0/19"
-  availability_zone       = "eu-west-1b"
+  availability_zone       = "${var.aws_region}b"
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                       = "public-eu-west-1b"
+    "Name"                       = "public-1b"
     "kubernetes.io/role/elb"     = "1"
     "kubernetes.io/cluster/demo" = "owned"
   }
@@ -80,7 +80,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public-eu-west-1a.id
+  subnet_id     = aws_subnet.public-1a.id
 
   tags = {
     Name = "nat"
@@ -143,22 +143,22 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "private-eu-west-1a" {
-  subnet_id      = aws_subnet.private-eu-west-1a.id
+resource "aws_route_table_association" "private-1a" {
+  subnet_id      = aws_subnet.private-1a.id
   route_table_id = aws_route_table.private.id
 }
 
-resource "aws_route_table_association" "private-eu-west-1b" {
-  subnet_id      = aws_subnet.private-eu-west-1b.id
+resource "aws_route_table_association" "private-1b" {
+  subnet_id      = aws_subnet.private-1b.id
   route_table_id = aws_route_table.private.id
 }
 
-resource "aws_route_table_association" "public-eu-west-1a" {
-  subnet_id      = aws_subnet.public-eu-west-1a.id
+resource "aws_route_table_association" "public-1a" {
+  subnet_id      = aws_subnet.public-1a.id
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "public-eu-west-1b" {
-  subnet_id      = aws_subnet.public-eu-west-1b.id
+resource "aws_route_table_association" "public-1b" {
+  subnet_id      = aws_subnet.public-1b.id
   route_table_id = aws_route_table.public.id
 }
