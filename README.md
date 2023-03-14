@@ -2,3 +2,4 @@
 
 * Optional variables<br />
 aws_region - Region where all resources will be created
+
